@@ -1,0 +1,141 @@
+#include<fstream.h>
+#include<conio.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<iomanip.h>
+struct citizen
+{
+int citizencode;
+char citizenname[50];
+char citizenmotname[50];
+char citizenftname[50];
+char citizendob[20];
+char citizencaste[50];
+char citizendesig[50];
+char citizenjobtype[50];
+char citizenresiaddr[50];
+char citizenidproof[50];
+char citizenpincode[10];
+
+};
+citizen citizen;
+void main()
+{
+int a;
+cout<<"WELCOME TO AADHAR CARD REGESTRATION MENU :-- \n";
+cout<<"SELECT OPTION:\n";
+cout<<"1:NEW CANDIDATE REGESTRATION\n";
+cout<<"2:MODIFY EARLIER DATA\n";
+cin>>a;
+if(a==1)
+{
+fstream sfile;
+sfile.open("adhar.dat",ios::app);
+char ans;
+ans='y';
+clrscr();
+do
+{
+clrscr();
+gotoxy(1,2);
+cout<<"ADDHAR CARD REGESTRATION MENU :  ";
+cout<<"=========================================================================";
+gotoxy(1,4);
+cout<<"please enter aadhar number...\n";
+cin>>citizen.citizencode;
+gotoxy(1,6);
+cout<<"enter name of the candidate\n";
+gets(citizen.citizenname);
+gotoxy(1,8);
+cout<<"enter mother's name\n";
+gets(citizen.citizenmotname);
+gotoxy(1,10);
+cout<<"enter father's name..\n";
+gets(citizen.citizenftname);
+gotoxy(1,12);
+cout<<" enter date of birth:: sample:::: ------ 15-2-1995 -----(dd-m-yyyy)\n";
+gets(citizen.citizendob);
+gotoxy(1,14);
+cout<<"caste";
+gets(citizen.citizencaste);
+gotoxy(1,16);
+cout<<"designation";
+gets(citizen.citizendesig);
+gotoxy(1,18);
+cout<<"please specify whether the candidate is and government employee or not..\n";
+cout<<"enter 'GOVT' for government employee and 'NGOVT' for private sector employee\n";
+gets(citizen.citizenjobtype);
+gotoxy(1,22);
+cout<<"enter residential address\n";
+gets(citizen.citizenresiaddr);
+gotoxy(1,24);
+cout<<"enter identity proof of the citizen";
+gets(citizen.citizenidproof);
+gotoxy(1,28);
+cout<<"enter pin code\n";
+gets(citizen.citizenpincode);
+sfile.write((char*)&citizen,sizeof(citizen));
+gotoxy(1,30);
+cout<<"want to continue ?? ........";
+cin>>ans;
+}
+while(ans=='y');
+sfile.close();
+}
+else
+{
+ int xcitizen_code;
+ fstream citizenfile,tempfile;
+ citizenfile.open("adhar.dat", ios::binary||ios::nocreate);
+ tempfile.open("TEMP.dat", ios::out);
+ clrscr();
+ cout<<"DATA EDIT MENU:\n ";
+ cout<<"========================================================================";
+	cout << "\nEnter citizen's code to modify : ";
+	cin >> xcitizen_code;
+	citizenfile.read((char *) &citizen, sizeof(citizen));
+	while (citizenfile)
+	{
+		if (!citizenfile)
+			exit(0);
+		if (citizen.citizencode == xcitizen_code)
+		{
+			cout << "\nCode is : " << citizen.citizencode;
+			cout << "\nName is : " << citizen.citizenname;
+			cout << "\nDesignation is : " << citizen.citizendesig;
+			cout<<"\n citizens address is : "<<citizen.citizenresiaddr;
+			cout << "\nEnter new citizen's code : ";
+			cin >> citizen.citizencode;
+			cout << "\ncitizens name : ";
+			gets(citizen.citizenname);
+			cout << "\ncitizens designation : ";
+			gets(citizen.citizendesig);
+			cout<<"\nnew address : ";
+			gets(citizen.citizenresiaddr);
+			tempfile.write((char *) &citizen, sizeof(citizen));
+		}
+		else
+			tempfile.write((char *) &citizen, sizeof(citizen));
+		citizenfile.read((char *) &citizen, sizeof(citizen));
+	}
+	citizenfile.close();
+	tempfile.close();
+	fstream xfile, yfile;
+	xfile.open("TEMP.dat", ios::binary||ios::nocreate);
+	yfile.open("adhar.dat",ios::out);
+	while (xfile)
+	{
+		if (!xfile)
+			exit(0);
+		yfile.write((char *) &citizen, sizeof(citizen));
+		xfile.read((char *) &citizen, sizeof(citizen));
+	}
+	xfile.close();
+	yfile.close();
+	}
+
+ }
+
+
+
+
